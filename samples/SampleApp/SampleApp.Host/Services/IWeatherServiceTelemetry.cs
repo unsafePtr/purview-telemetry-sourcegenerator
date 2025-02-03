@@ -2,6 +2,7 @@
 using Purview.Telemetry.Activities;
 using Purview.Telemetry.Logging;
 using Purview.Telemetry.Metrics;
+using static SampleApp.Host.Services.WeatherService;
 
 namespace SampleApp.Host.Services;
 
@@ -54,7 +55,7 @@ public interface IWeatherServiceTelemetry
 	void TemperatureOutOfRange(int minTempInC);
 
 	[Error]
-	void RequestedCountIsTooSmall(int requestCount);
+	void RequestedCountIsTooSmall(int requestCount, [LogProperties] ComplexObject complexObject);
 
 	[Info]
 	void TemperaturesWithinRange();

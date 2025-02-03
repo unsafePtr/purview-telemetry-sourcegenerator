@@ -2,6 +2,14 @@
 
 namespace SampleApp.Host.Services;
 
+
+public class ComplexObject
+{
+	public int MinRequestCount { get; set; }
+	public int MaxRequestCount { get; set; }
+
+}
+
 sealed class WeatherService(IWeatherServiceTelemetry telemetry) : IWeatherService
 {
 	const int TooColdTempInC = -10;
@@ -11,6 +19,8 @@ sealed class WeatherService(IWeatherServiceTelemetry telemetry) : IWeatherServic
 		"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 	];
 
+
+
 	public Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync(int requestCount, CancellationToken cancellationToken = default)
 	{
 		const int minRequestCount = 5;
@@ -18,7 +28,11 @@ sealed class WeatherService(IWeatherServiceTelemetry telemetry) : IWeatherServic
 
 		if (requestCount < minRequestCount || requestCount > maxRequestCount)
 		{
-			telemetry.RequestedCountIsTooSmall(requestCount);
+			telemetry.RequestedCountIsTooSmall(requestCount, new ComplexObject()
+			{
+				MinRequestCount = minRequestCount,
+				MaxRequestCount = maxRequestCount
+			});
 
 			throw new ArgumentOutOfRangeException(nameof(requestCount), $"Requested count must be at least {minRequestCount}, and no greater than {maxRequestCount}.");
 		}
